@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notely - AI Class Notes Writer</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom right, #FFEBD7, #E5D1FF); /* Gradient Background */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 4em 2em;
+            position: relative;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.2); /* Semi-transparent overlay */
+            border-radius: 20px;
+            z-index: 0;
+        }
+
+        .hero-section h1, .hero-section h2 {
+            position: relative;
+            z-index: 1;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 3em;
+            margin: 2em 0;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1em;
+            background: rgba(255, 255, 255, 0.9); /* Card Background */
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #FF6F61;
+        }
+
+        .stat-text {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .main-heading {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 0.5em;
+        }
+
+        .sub-heading {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 2em;
+        }
+
+        .cta-button {
+            background-color: #007bff;
+            color: white;
+            padding: 1em 2em;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 1em;
+            transition: background-color 0.3s, transform 0.3s; /* Added transition for hover effect */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            position: relative; /* Added for z-index stacking context */
+            z-index: 1; /* Ensure button is above overlay */
+        }
+
+        .cta-button:hover {
+            background-color: #0056b3; /* Darker shade on hover */
+            transform: translateY(-3px);
+        }
+
+        .testimonials {
+            padding: 4em 2em;
+            background-color: #f8f9fa;
+            width: 100%;
+            max-width: 1200px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2em;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 1.5em;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .steps-section {
+            padding: 4em 2em;
+            text-align: center;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 2em;
+            margin: 2em auto;
+        }
+
+        .step {
+            flex: 1;
+            padding: 1em;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 2em;
+            text-align: center;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: auto;
+        }
+
+        @media (max-width: 600px) {
+            .steps {
+                flex-direction: column;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="hero-section">
+    <div class="stats-container">
+        <div class="stat-item">
+            <div class="stat-number">1000+</div>
+            <div class="stat-text">happy copywriters & students</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">4.9/5</div>
+            <div class="stat-text">satisfaction rating</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">25,000+ hours</div>
+            <div class="stat-text">saved in content writing so far</div>
+        </div>
+    </div>
+
+    <h1 class="main-heading">A better, 10x faster way to excel in your classes</h1>
+    <p class="sub-heading">Introducing Notely, the revolutionary app powered by artificial intelligence<br>
+    that takes your studies and preparation to the next level.</p>
+
+    <a href="/use_now" class="cta-button">Start Using Free forever!</a> <!-- Button that redirects to use_now.html -->
+
+</div>
+
+<div class="testimonials">
+    <h2>Loved by Real Students</h2>
+    <div class="testimonial-grid">
+        <div class="testimonial-card">
+            <h3>Ayush</h3>
+            <h4>Great app - Easy to use</h4>
+            <p>Great value and so easy to use and saves me so much time! I was shocked by how much time and brain energy it saved me. Simple & easy...gotta love that.</p>
+        </div>
+        <div class="testimonial-card">
+            <h3>Priya</h3>
+            <h4>Life-Saving Tool</h4>
+            <p>This app has completely changed my studying habits! I can now focus on understanding concepts rather than just memorizing notes.</p>
+        </div>
+        <div class="testimonial-card">
+            <h3>Raj</h3>
+            <h4>Highly Recommended</h4>
+            <p>I can't imagine my academic life without Notely! It's fast, reliable, and the notes are always on point.</p>
+        </div>
+    </div>
+</div>
+
+<div class="steps-section">
+    <h2>Save ⏰ and be productive on your academics with Notely</h2>
+    <div class="steps">
+        <div class="step">
+            <div class="step-number">1</div>
+            <p>Choose your academic curriculum</p>
+        </div>
+        <div class="step">
+            <div class="step-number">2</div>
+            <p>Add some topic for context for A.I to help you</p>
+        </div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <p>Notely magically does anything you'll be requiring</p>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

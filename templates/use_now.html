@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Use Now - AI Learning Assistant</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to bottom right, #FFEBD7, #E5D1FF);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 2em;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+        }
+        label {
+            font-weight: bold;
+            color: #555;
+            text-align: left;
+        }
+        select, input[type="text"], textarea {
+            padding: 0.5em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 0.8em;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #555;
+        }
+        .response {
+            margin-top: 1.5em;
+            padding: 1em;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            text-align: left;
+        }
+        .tts-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1em;
+            margin-top: 1em;
+        }
+        .loading {
+            display: none;
+            margin-top: 1em;
+            font-size: 16px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Write your class notes ✏️ with Notely</h1>
+    <form id="inputForm">
+        <label for="board">Which board are you studying in?</label>
+        <select name="board" required>
+            <option value="CBSE">CBSE (Central Board of Secondary Education)</option>
+            <option value="IB">IB (International Baccalaureate)</option>
+            <option value="ICSE">ICSE (Indian Certificate of Secondary Education)</option>
+            <option value="IGCSE">IGCSE (International General Certificate of Secondary Education)</option>
+        </select>
+
+        <label for="grade">Which grade are you studying in?</label>
+        <select name="grade" required>
+            <option value="8th">8th grade</option>
+            <option value="9th">9th grade</option>
+            <option value="10th">10th grade</option>
+            <option value="11th">11th grade</option>
+            <option value="12th">12th grade</option>
+        </select>
+
+        <label for="topic">Please specify the topic and subject you'll be needing notes for!</label>
+        <textarea name="topic" rows="3" required></textarea>
+
+        <button type="submit">Write me Notes!</button>
+    </form>
+
+    <div class="loading" id="loadingIndicator">Please wait...</div>
+
+    <div class="response" id="responseContainer" style="display: none;">
+        <h3>Response for "<span id="topic"></span>"</h3>
+        <div id="responseText"></div>
+        <p><strong>Press "Play" to listen to the answer.</strong></p>
+    </div>
+
+    <div class="tts-controls" id="ttsControls" style="display: none;">
+        <button id="playButton">Play</button>
+        <button id="pauseButton" style="display: none;">Pause</button>
+        <button id="resumeButton" style="display: none;">Resume</button>
+    </div>
+</div>
+
+<script>
+    let utterance;
+
+    document.getElementById('inputForm').onsubmit = async function(event) {
+        event.preventDefault();
+
+        // Show loading indicator
+        document.getElementById('loadingIndicator').style.display = 'block';
+        document.getElementById('responseContainer').style.display = 'none';
+
+        // Prepare form data
+        const formData = new FormData(event.target);
+        const data = new URLSearchParams(formData);
+
+        // Fetch AI response from server
+        const response = await fetch('/use_now', {
+            method: 'POST',
+            body: data
+        });
+        const result = await response.json();
+
+        // Hide loading indicator
+        document.getElementById('loadingIndicator').style.display = 'none';
+
+        // Display the response in HTML
+        document.getElementById('topic').textContent = result.topic;
+
+        // Format the response text for better readability
+        const formattedResponse = formatResponse(result.response);
+        document.getElementById('responseText').innerHTML = formattedResponse;
+
+        document.getElementById('responseContainer').style.display = 'block';
+
+        // Prepare TTS
+        utterance = new SpeechSynthesisUtterance(result.response);
+        document.getElementById('ttsControls').style.display = 'flex';
+
+        // Reset button visibility
+        document.getElementById('pauseButton').style.display = 'none';
+        document.getElementById('resumeButton').style.display = 'none';
+    };
+
+    document.getElementById('playButton').onclick = function() {
+        if (utterance) {
+            speechSynthesis.speak(utterance);
+            document.getElementById('playButton').style.display = 'none';
+            document.getElementById('pauseButton').style.display = 'inline-block';
+        }
+    };
+
+    document.getElementById('pauseButton').onclick = function() {
+        speechSynthesis.pause();
+        document.getElementById('pauseButton').style.display = 'none';
+        document.getElementById('resumeButton').style.display = 'inline-block';
+    };
+
+    document.getElementById('resumeButton').onclick = function() {
+        speechSynthesis.resume();
+        document.getElementById('pauseButton').style.display = 'inline-block';
+        document.getElementById('resumeButton').style.display = 'none';
+    };
+
+    function formatResponse(responseText) {
+        // Make words in ** bold and format the text
+        const boldText = responseText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        const lines = boldText.split('\n');
+        const formattedText = lines.map(line => {
+            // If the line starts with a bullet point, make it a list item
+            if (line.startsWith('- ')) {
+                return `<li>${line.substring(2)}</li>`;
+            }
+            // Otherwise, return it as a paragraph
+            return `<p>${line}</p>`;
+        }).join('');
+
+        return `<ul>${formattedText}</ul>`;
+    }
+</script>
+
+</body>
+</html>
