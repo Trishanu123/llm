@@ -102,25 +102,46 @@
             <option value="12th">12th grade</option>
         </select>
 
+        <label for="language">Select Language for Translation</label>
+        <select name="language" required>
+            <option value="English">English</option>
+            <option value="Hindi">Hindi</option>
+            <option value="Bengali">Bengali</option>
+            <option value="Telugu">Telugu</option>
+            <option value="Marathi">Marathi</option>
+            <option value="Tamil">Tamil</option>
+            <option value="Gujarati">Gujarati</option>
+            <option value="Kannada">Kannada</option>
+            <option value="Malayalam">Malayalam</option>
+            <option value="Odia">Odia</option>
+            <option value="Punjabi">Punjabi</option>
+            <option value="Urdu">Urdu</option>
+        </select>
+
         <label for="topic">Please specify the topic and subject you'll be needing notes for!</label>
         <textarea name="topic" rows="3" required></textarea>
+
+
 
         <button type="submit">Write me Notes!</button>
     </form>
 
     <div class="loading" id="loadingIndicator">Please wait...</div>
 
-    <div class="response" id="responseContainer" style="display: none;">
-        <h3>Response for "<span id="topic"></span>"</h3>
-        <div id="responseText"></div>
-        <p><strong>Press "Play" to listen to the answer.</strong></p>
-    </div>
-
     <div class="tts-controls" id="ttsControls" style="display: none;">
+        <label for="topic">Press "Play" to listen to the answer.</label>
         <button id="playButton">Play</button>
         <button id="pauseButton" style="display: none;">Pause</button>
         <button id="resumeButton" style="display: none;">Resume</button>
     </div>
+
+    <div class="response" id="responseContainer" style="display: none;">
+        <h3>Response for "<span id="topic"></span>"</h3>
+        <div id="responseText"></div>
+        
+    </div>
+
+
 </div>
 
 <script>
@@ -156,13 +177,17 @@
 
         document.getElementById('responseContainer').style.display = 'block';
 
-        // Prepare TTS
-        utterance = new SpeechSynthesisUtterance(result.response);
-        document.getElementById('ttsControls').style.display = 'flex';
+        // Prepare TTS only if the language is English
+        if (result.language === 'English') {
+            utterance = new SpeechSynthesisUtterance(result.response);
+            document.getElementById('ttsControls').style.display = 'flex';
 
-        // Reset button visibility
-        document.getElementById('pauseButton').style.display = 'none';
-        document.getElementById('resumeButton').style.display = 'none';
+            // Reset button visibility
+            document.getElementById('pauseButton').style.display = 'none';
+            document.getElementById('resumeButton').style.display = 'none';
+        } else {
+            document.getElementById('ttsControls').style.display = 'none';
+        }
     };
 
     document.getElementById('playButton').onclick = function() {
@@ -186,15 +211,12 @@
     };
 
     function formatResponse(responseText) {
-        // Make words in ** bold and format the text
         const boldText = responseText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         const lines = boldText.split('\n');
         const formattedText = lines.map(line => {
-            // If the line starts with a bullet point, make it a list item
             if (line.startsWith('- ')) {
                 return `<li>${line.substring(2)}</li>`;
             }
-            // Otherwise, return it as a paragraph
             return `<p>${line}</p>`;
         }).join('');
 
